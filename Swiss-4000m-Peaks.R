@@ -5,23 +5,23 @@ library(shinydashboard)
 library(leaflet)
 library(DT)
 
-# URL der Webseite
+# Website URL
 url <- "https://bestswiss.ch/4000er-schweiz"
 
-# Webseite lesen
+# Read webseite
 webpage <- read_html(url)
 
-# Tabelle mit den Bergdaten extrahieren
+# Extract table with the mountain data
 mountain_table <- webpage %>%
   html_node("table") %>%
   html_table()
 
-# Daten bereinigen und vorbereiten
+# Cleaning and preparing the data
 mountain_data <- mountain_table %>%
-  rename(Name = X1, Height = X2, Region = X3) %>%  # Umbenennen der Spalten
+  rename(Name = X1, Height = X2, Region = X3) %>%  # Rename the columns
   mutate(Height = as.numeric(gsub("[^0-9]", "", Height)))
 
-# Koordinaten explizit hinzufügen (Reihenfolge entspricht der auf der Webseite)
+# Define manual coordinates (Fits the structure of the mountain data table on the website)
 coordinates <- data.frame(
   Latitude = c(45.93676, 45.94156, 45.93606, 45.93333, 46.11686, 45.92789, 45.93333, 
                46.12449, 46.09194, 45.97625, 45.93799, 46.02000, 45.92300, 46.11694, 
@@ -39,7 +39,7 @@ coordinates <- data.frame(
                 8.07222, 7.85694, 7.89722, 8.09972, 7.98500, 7.98500)
 )
 
-# Koordinaten zu den Bergdaten hinzufügen
+# Add coordinates to our dataset
 mountain_data <- cbind(mountain_data, coordinates)
 
 # Define UI
